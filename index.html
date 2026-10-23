@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PeerTutor</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 15px; background: #f6fbfc; }
+    h1 { color: #0e8a9b; }
+    .card { background: white; border: 1px solid #cde; border-radius: 10px; padding: 10px 14px; margin: 10px 0; }
+    button { background: #0e8a9b; color: white; border: 0; padding: 7px 12px; border-radius: 6px; cursor: pointer; }
+    input, select { padding: 6px; margin: 3px 0; }
+  </style>
+</head>
+<body>
+
+  <h1>📚 PeerTutor</h1>
+  <p>Find a qualified peer tutor, book a time, and share notes.</p>
+
+  <h2>1. Find a tutor</h2>
+  <select id="subject" onchange="showTutors()">
+    <option value="">All subjects</option>
+    <option>H2 Math</option>
+    <option>H2 Chemistry</option>
+    <option>H2 Biology</option>
+    <option>GP</option>
+  </select>
+  <div id="tutors"></div>
+
+  <h2>2. My bookings</h2>
+  <div id="bookings"><p>No bookings yet.</p></div>
+
+  <h2>3. Shared notes</h2>
+  <input id="noteTitle" placeholder="Note title (e.g. Vectors summary)">
+  <button onclick="addNote()">Share</button>
+  <div id="notes"></div>
+
+  <script>
+    var tutors = [
+      { name: "Aiden", subject: "H2 Math", good: "Vectors, Integration", time: "Mon 4pm" },
+      { name: "Mei Ling", subject: "H2 Chemistry", good: "Organic Chem", time: "Tue 3pm" },
+      { name: "Daniel", subject: "H2 Biology", good: "Genetics", time: "Wed 5pm" },
+      { name: "Sara", subject: "GP", good: "Essay structure", time: "Sat 10am" }
+    ];
+    var bookings = [];
+    var notes = ["H2 Math - Differentiation cheat sheet"];
+
+    function showTutors() {
+      var chosen = document.getElementById("subject").value;
+      var html = "";
+      for (var i = 0; i < tutors.length; i++) {
+        var t = tutors[i];
+        if (chosen == "" || t.subject == chosen) {
+          html += "<div class='card'><b>" + t.name + "</b> (" + t.subject + ")<br>" +
+                  "Good at: " + t.good + "<br>Free: " + t.time + "<br>" +
+                  "<button onclick='book(" + i + ")'>Book</button></div>";
+        }
+      }
+      document.getElementById("tutors").innerHTML = html;
+    }
+
+    function book(i) {
+      var topic = prompt("What topic do you want to learn?");
+      if (!topic) return;
+      bookings.push(tutors[i].name + " - " + tutors[i].subject + " - " + tutors[i].time + " - Topic: " + topic);
+      showBookings();
+    }
+
+    function showBookings() {
+      var html = "";
+      for (var i = 0; i < bookings.length; i++) {
+        html += "<div class='card'>" + bookings[i] + "</div>";
+      }
+      document.getElementById("bookings").innerHTML = html || "<p>No bookings yet.</p>";
+    }
+
+    function addNote() {
+      var title = document.getElementById("noteTitle").value;
+      if (!title) return;
+      notes.push(title);
+      document.getElementById("noteTitle").value = "";
+      showNotes();
+    }
+
+    function showNotes() {
+      var html = "";
+      for (var i = 0; i < notes.length; i++) {
+        html += "<div class='card'>📄 " + notes[i] + "</div>";
+      }
+      document.getElementById("notes").innerHTML = html;
+    }
+
+    showTutors();
+    showNotes();
+  </script>
+</body>
+</html>
